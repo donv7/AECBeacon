@@ -16,3 +16,7 @@ AECBeacon.iml
 .idea/libraries/appcompat_v7_22_2_1.xml
 .idea/libraries/support_annotations_22_2_1.xml
 .idea/libraries/support_v4_22_2_1.xml
+build/intermediates/gradle_project_sync_data.bin
+build/intermediates/dex-cache/cache.xml
+butterknife_7_0_1.xml
+app.iml

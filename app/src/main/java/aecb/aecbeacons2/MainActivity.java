@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.annotation.TargetApi;
@@ -25,14 +26,18 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 @TargetApi(21)
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends Activity {
 
     // region bluetooth vars
     private BluetoothAdapter mBluetoothAdapter;
@@ -51,6 +56,8 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+
         mHandler = new Handler();
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             Toast.makeText(this, "BLE Not Supported",
@@ -105,6 +112,11 @@ public class MainActivity extends ActionBarActivity {
     // endregion
 
     // region ui
+    @OnClick(R.id.btnOne)
+    public void onClick_submit(View v) {
+        Toast.makeText(this, "hi", Toast.LENGTH_SHORT).show();
+    }
+
     // endregion
 
     // region bluetooth stuff
