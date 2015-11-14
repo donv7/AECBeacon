@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
@@ -25,13 +24,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @TargetApi(21)
@@ -67,6 +64,7 @@ public class MainActivity extends ActionBarActivity {
     private ScanSettings settings;
     private List<ScanFilter> filters;
     private BluetoothGatt mGatt;
+    private HashMap<String, Integer> mBeacons;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +85,10 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        mBeacons = new HashMap<String, Integer>();
+        mBeacons.put("D5:4E:CC:37:29:F5", -1000);
+        mBeacons.put("F2:C1:3A:BB:AD:D9", -1000);
+        mBeacons.put("E0:60:E2:5A:9E:29", -1000);
         if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
@@ -135,17 +137,6 @@ public class MainActivity extends ActionBarActivity {
 
     private void scanLeDevice(final boolean enable) {
         if (enable) {
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (Build.VERSION.SDK_INT < 21) {
-                        mBluetoothAdapter.stopLeScan(mLeScanCallback);
-                    } else {
-                        mLEScanner.stopScan(mScanCallback);
-
-                    }
-                }
-            }, SCAN_PERIOD);
             if (Build.VERSION.SDK_INT < 21) {
                 mBluetoothAdapter.startLeScan(mLeScanCallback);
             } else {
@@ -164,10 +155,12 @@ public class MainActivity extends ActionBarActivity {
     private ScanCallback mScanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
-            Log.i("callbackType", String.valueOf(callbackType));
-            Log.i("result", result.toString());
-            BluetoothDevice btDevice = result.getDevice();
-            connectToDevice(btDevice);
+            if (mBeacons.keySet().contains(result.getDevice().getAddress())) {
+                mBeacons.put(result.getDevice().getAddress(), result.getRssi());
+            }
+            Log.i("result", mBeacons.toString());
+//            BluetoothDevice btDevice = result.getDevice();
+//            connectToDevice(btDevice);
         }
 
         @Override
