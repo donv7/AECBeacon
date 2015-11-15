@@ -37,6 +37,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -85,6 +87,7 @@ public class MainActivity extends Activity {
     Uri imageUri;
 
     @Bind(R.id.ivPic) ImageView ivPic;
+    @Bind(R.id.gvGrid) GridView gvGrid;
 
     // region create, resume, pause, destroy
     @Override
@@ -106,6 +109,16 @@ public class MainActivity extends Activity {
         final BluetoothManager bluetoothManager =
                 (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter = bluetoothManager.getAdapter();
+
+        gvGrid.setAdapter(new ImageAdapter(this));
+
+        gvGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v,
+                                    int position, long id) {
+                Toast.makeText(MainActivity.this, "" + position,
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 

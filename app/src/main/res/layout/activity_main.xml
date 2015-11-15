@@ -23,13 +23,13 @@ android:gravity="center">
     <GridView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/gvGrid"
         android:layout_width="match_parent"
-        android:layout_height="350dp"
-        android:columnWidth="90dp"
-        android:numColumns="auto_fit"
+        android:layout_height="420dp"
+        android:columnWidth="120dp"
+        android:numColumns="3"
         android:verticalSpacing="10dp"
         android:horizontalSpacing="10dp"
-        android:stretchMode="columnWidth"
-        android:gravity="center" />
+        android:stretchMode="none"
+        android:gravity="center"/>
 
     <ImageView
         android:id="@+id/ivPic"
