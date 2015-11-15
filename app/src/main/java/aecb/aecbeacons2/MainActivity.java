@@ -212,6 +212,27 @@ public class MainActivity extends Activity {
             public void success(Map<String, String> tokenResponse, retrofit.client.Response response) {
                 Toast.makeText(MainActivity.this, "Successfully uploaded!",
                         Toast.LENGTH_SHORT).show();
+
+                // get the images for this new beacon from the server
+                AecbApi.getImages(new Callback<List<AecbImage>>() {
+                    @Override
+                    public void success(List<AecbImage> beaconList, retrofit.client.Response response) {
+                        Toast.makeText(MainActivity.this, "Successfully gotten?...!",
+                                Toast.LENGTH_SHORT).show();
+
+                        filterBeaconList(beaconList, beaconName);
+                        mImageAdapter.setBeaconList(beaconList);
+                        gvGrid.invalidateViews();
+                        int x = 0;
+                        x++;
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Toast.makeText(MainActivity.this, "Fuck.",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @Override
@@ -263,6 +284,7 @@ public class MainActivity extends Activity {
         for (int i=0; i<beaconList.size(); i++) {
             if(!beaconList.get(i).getBeacon().equals(beaconName)){
                 beaconList.remove(i);
+                i--;
             }
         }
     }
@@ -273,10 +295,10 @@ public class MainActivity extends Activity {
         public void onScanResult(int callbackType, ScanResult result) {
             String newBeaconName = beaconInProximity(result);
 
-            if(newBeaconName == null){
+            /*if(newBeaconName == null){
                 //make everything blank or something like that
             }
-            else if(beaconName != newBeaconName){
+            else */if(beaconName != newBeaconName){
                 beaconName = newBeaconName;
 
                 // get the images for this new beacon from the server
@@ -287,10 +309,10 @@ public class MainActivity extends Activity {
                                 Toast.LENGTH_SHORT).show();
 
                         filterBeaconList(beaconList, beaconName);
-
-                        //currentBeaconList = beaconList;
                         mImageAdapter.setBeaconList(beaconList);
                         gvGrid.invalidateViews();
+                        int x=0;
+                        x++;
                     }
 
                     @Override
