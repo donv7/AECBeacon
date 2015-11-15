@@ -1,14 +1,8 @@
 package aecb.aecbeacons2;
 
-import android.bluetooth.BluetoothAdapter;
-import android.os.Handler;
-import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
@@ -25,12 +19,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.parse.Parse;
+
+import butterknife.Bind;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -49,6 +51,9 @@ public class MainActivity extends Activity {
     private List<ScanFilter> filters;
     private BluetoothGatt mGatt;
     private HashMap<String, Integer> mBeacons;
+
+    @Bind(R.id.textView) TextView textView;
+
     // endregion
 
     // region create, resume, pause, destroy
@@ -56,6 +61,10 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Parse.enableLocalDatastore(this);
+        Parse.initialize(this, "2MQu7HMiThB2CaN0pEZuKCV2O794eV4zMJw0RR5y", "thl1PCaGgOqIjHM74TZhg72FXOijSmg7SzZbY6ck");
+
         ButterKnife.bind(this);
 
         mHandler = new Handler();
@@ -153,12 +162,26 @@ public class MainActivity extends Activity {
     private ScanCallback mScanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
-            if (mBeacons.keySet().contains(result.getDevice().getAddress())) {
-                mBeacons.put(result.getDevice().getAddress(), result.getRssi());
-            }
+            textView.setText(beaconInProximity(result));
             Log.i("result", mBeacons.toString());
 //            BluetoothDevice btDevice = result.getDevice();
 //            connectToDevice(btDevice);
+        }
+
+        private String beaconInProximity(ScanResult result) {
+            if (mBeacons.keySet().contains(result.getDevice().getAddress())) {
+                mBeacons.put(result.getDevice().getAddress(), result.getRssi());
+            }
+
+            String closest = null;
+            for (String bId : mBeacons.keySet()) {
+                if (mBeacons.get(bId) > -85) {
+                    if (closest == null || mBeacons.get(bId) > mBeacons.get(closest)) {
+                        closest = bId;
+                    }
+                }
+            }
+            return closest;
         }
 
         @Override

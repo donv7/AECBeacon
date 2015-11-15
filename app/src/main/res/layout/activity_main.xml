@@ -56,8 +56,7 @@ android:gravity="center">
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="18dp"
-        android:layout_marginBottom="18dp"
-        android:visibility="invisible"/> <!-- Feature currently disabled -->
+        android:layout_marginBottom="18dp"/>
 </RelativeLayout>
 
 </RelativeLayout>
