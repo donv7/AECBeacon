@@ -97,8 +97,8 @@ public class MainActivity extends Activity {
     //List<AecbImage> currentBeaconList;
     ImageAdapter mImageAdapter;
 
-    @Bind(R.id.ivPic) ImageView ivPic;
-    @Bind(R.id.btnOne) Button btnOne;
+    //@Bind(R.id.ivPic) ImageView ivPic;
+    //@Bind(R.id.btnOne) Button btnOne;
     @Bind(R.id.gvGrid) GridView gvGrid;
 
     // region create, resume, pause, destroy
@@ -128,11 +128,28 @@ public class MainActivity extends Activity {
         gvGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                Toast.makeText(MainActivity.this, "" + position,
-                        Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(MainActivity.this, FullScreenViewActivity.class);
-                i.putExtra("position", position);
-                startActivity(i);
+                
+                if(position==0){
+                    //take a picture with the camera
+                    Intent getCameraImage = new Intent("android.media.action.IMAGE_CAPTURE");
+
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'T'HHmmss");
+                    String timeStamp = dateFormat.format(new Date());
+                    String imageFileName = "aecb_" + timeStamp + ".jpg";
+
+                    // get the path to save the file
+                    File path = MainActivity.this.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+                    File photo = new File(path, imageFileName);
+                    getCameraImage.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
+                    imageUri = Uri.fromFile(photo);
+
+                    startActivityForResult(getCameraImage, REQUEST_CAMERA);
+                } else {
+                    Intent i = new Intent(MainActivity.this, FullScreenViewActivity.class);
+                    i.putExtra("position", position);
+                    startActivity(i);
+                }
             }
         });
 
@@ -184,7 +201,7 @@ public class MainActivity extends Activity {
     // endregion
 
     // region ui
-    @OnClick(R.id.btnOne)
+    /*@OnClick(R.id.btnOne)
     public void onClick_submit(View v) {
         //take a picture with the camera
         Intent getCameraImage = new Intent("android.media.action.IMAGE_CAPTURE");
@@ -201,10 +218,10 @@ public class MainActivity extends Activity {
         imageUri = Uri.fromFile(photo);
 
         startActivityForResult(getCameraImage, REQUEST_CAMERA);
-    }
+    }*/
 
     protected void imageOnActivityResult(Intent data) {
-        ivPic.setImageURI(imageUri);
+        //ivPic.setImageURI(imageUri);
 
         File f = new File(imageUri.getPath());
 
@@ -216,6 +233,27 @@ public class MainActivity extends Activity {
             public void success(Map<String, String> tokenResponse, retrofit.client.Response response) {
                 Toast.makeText(MainActivity.this, "Successfully uploaded!",
                         Toast.LENGTH_SHORT).show();
+
+                // get the images for this new beacon from the server
+                AecbApi.getImages(new Callback<List<AecbImage>>() {
+                    @Override
+                    public void success(List<AecbImage> beaconList, retrofit.client.Response response) {
+                        Toast.makeText(MainActivity.this, "Successfully gotten?...!",
+                                Toast.LENGTH_SHORT).show();
+
+                        filterBeaconList(beaconList, beaconName);
+                        mImageAdapter.setBeaconList(beaconList);
+                        gvGrid.invalidateViews();
+                        int x = 0;
+                        x++;
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Toast.makeText(MainActivity.this, "Fuck.",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @Override
@@ -267,6 +305,7 @@ public class MainActivity extends Activity {
         for (int i=0; i<beaconList.size(); i++) {
             if(!beaconList.get(i).getBeacon().equals(beaconName)){
                 beaconList.remove(i);
+                i--;
             }
         }
     }
@@ -277,10 +316,10 @@ public class MainActivity extends Activity {
         public void onScanResult(int callbackType, ScanResult result) {
             String newBeaconName = beaconInProximity(result);
 
-            if(newBeaconName == null){
+            /*if(newBeaconName == null){
                 //make everything blank or something like that
             }
-            else if(beaconName != newBeaconName){
+            else */if(beaconName != newBeaconName){
                 beaconName = newBeaconName;
 
                 // get the images for this new beacon from the server
@@ -291,11 +330,12 @@ public class MainActivity extends Activity {
                                 Toast.LENGTH_SHORT).show();
 
                         filterBeaconList(beaconList, beaconName);
-
                         //currentBeaconList = beaconList;
                         mBeaconList = beaconList;
                         mImageAdapter.setBeaconList(beaconList);
                         gvGrid.invalidateViews();
+                        int x=0;
+                        x++;
                     }
 
                     @Override
@@ -309,7 +349,7 @@ public class MainActivity extends Activity {
             }
             // otherwise, same beacon... do nothing
 
-            btnOne.setText(beaconName);
+            //btnOne.setText(beaconName);
             Log.i("result", mBeacons.toString());
 //            BluetoothDevice btDevice = result.getDevice();
 //            connectToDevice(btDevice);

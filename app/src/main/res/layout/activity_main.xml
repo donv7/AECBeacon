@@ -23,7 +23,7 @@ android:gravity="center">
     <GridView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/gvGrid"
         android:layout_width="match_parent"
-        android:layout_height="420dp"
+        android:layout_height="match_parent"
         android:columnWidth="120dp"
         android:numColumns="3"
         android:verticalSpacing="10dp"
@@ -31,29 +31,6 @@ android:gravity="center">
         android:stretchMode="none"
         android:gravity="center"/>
 
-    <ImageView
-        android:id="@+id/ivPic"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:contentDescription="pic"
-        android:src="#ffffff"
-        android:layout_centerHorizontal="true"
-        android:scaleType="centerCrop"
-        android:layout_above="@+id/btnOne"/>
-
-    <Button
-        android:id="@+id/btnOne"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#ffffff"
-        android:textSize="10sp"
-        android:text="button 1"
-        android:textColor="#000000"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="13dp"
-        android:layout_marginBottom="13dp"
-        android:textStyle="bold"/>
 
 </RelativeLayout>
 
