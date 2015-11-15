@@ -20,3 +20,4 @@ build/intermediates/gradle_project_sync_data.bin
 build/intermediates/dex-cache/cache.xml
 butterknife_7_0_1.xml
 app.iml
+local.properties

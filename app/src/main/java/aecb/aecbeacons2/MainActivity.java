@@ -1,5 +1,19 @@
 package aecb.aecbeacons2;
 
+import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Environment;
+import android.os.Handler;
+import android.provider.MediaStore;
+import android.support.v7.app.ActionBarActivity;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -33,8 +47,19 @@ import butterknife.Bind;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.Toast;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -44,6 +69,7 @@ public class MainActivity extends Activity {
     // region bluetooth vars
     private BluetoothAdapter mBluetoothAdapter;
     private int REQUEST_ENABLE_BT = 1;
+    private int REQUEST_CAMERA = 2;
     private Handler mHandler;
     private static final long SCAN_PERIOD = 10000;
     private BluetoothLeScanner mLEScanner;
@@ -55,6 +81,10 @@ public class MainActivity extends Activity {
     @Bind(R.id.textView) TextView textView;
 
     // endregion
+
+    Uri imageUri;
+
+    @Bind(R.id.ivPic) ImageView ivPic;
 
     // region create, resume, pause, destroy
     @Override
@@ -124,6 +154,29 @@ public class MainActivity extends Activity {
     @OnClick(R.id.btnOne)
     public void onClick_submit(View v) {
         Toast.makeText(this, "hi", Toast.LENGTH_SHORT).show();
+
+        //take a picture with the camera
+        Intent getCameraImage = new Intent("android.media.action.IMAGE_CAPTURE");
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'T'HHmmss");
+        String timeStamp = dateFormat.format(new Date());
+        String imageFileName = "aecb_" + timeStamp + ".jpg";
+
+        // get the path to save the file
+        File path = MainActivity.this.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+        File photo = new File(path, imageFileName);
+        getCameraImage.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
+        imageUri = Uri.fromFile(photo);
+
+        startActivityForResult(getCameraImage, REQUEST_CAMERA);
+    }
+
+    protected void imageOnActivityResult(Intent data) {
+        ivPic.setImageURI(imageUri);
+
+        //upload image to parse
+
     }
 
     // endregion
@@ -137,6 +190,9 @@ public class MainActivity extends Activity {
                 finish();
                 return;
             }
+        }
+        else if(requestCode == REQUEST_CAMERA && resultCode == RESULT_OK){
+            imageOnActivityResult(data);
         }
 
         super.onActivityResult(requestCode, resultCode, data);
