@@ -232,6 +232,7 @@ public class MainActivity extends Activity {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
             textView.setText(beaconInProximity(result));
+            String beaconName = beaconInProximity(result);
             Log.i("result", mBeacons.toString());
 //            BluetoothDevice btDevice = result.getDevice();
 //            connectToDevice(btDevice);

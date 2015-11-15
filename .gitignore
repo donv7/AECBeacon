@@ -21,3 +21,7 @@ build/intermediates/dex-cache/cache.xml
 butterknife_7_0_1.xml
 app.iml
 local.properties
+.idea/libraries/gson_2_3_1.xml
+.idea/libraries/okhttp_2_2_0.xml
+.idea/libraries/okio_1_2_0.xml
+.idea/libraries/retrofit_1_9_0.xml
