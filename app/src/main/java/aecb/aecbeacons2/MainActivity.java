@@ -72,6 +72,7 @@ import retrofit.mime.TypedFile;
 @TargetApi(21)
 public class MainActivity extends Activity {
 
+    public static List<AecbImage> mBeaconList;
     // region bluetooth vars
     private BluetoothAdapter mBluetoothAdapter;
     private int REQUEST_ENABLE_BT = 1;
@@ -129,6 +130,9 @@ public class MainActivity extends Activity {
                                     int position, long id) {
                 Toast.makeText(MainActivity.this, "" + position,
                         Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(MainActivity.this, FullScreenViewActivity.class);
+                i.putExtra("position", position);
+                startActivity(i);
             }
         });
 
@@ -289,6 +293,7 @@ public class MainActivity extends Activity {
                         filterBeaconList(beaconList, beaconName);
 
                         //currentBeaconList = beaconList;
+                        mBeaconList = beaconList;
                         mImageAdapter.setBeaconList(beaconList);
                         gvGrid.invalidateViews();
                     }
