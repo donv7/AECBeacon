@@ -48,7 +48,7 @@ public class FullScreenImageAdapter extends PagerAdapter {
         ImageView imgDisplay;
         Button btnClose;
 
-        position = 1;
+        //position = 1;
         inflater = (LayoutInflater) _activity
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View viewLayout = inflater.inflate(R.layout.layout_fullscreen_image, container,
@@ -57,7 +57,7 @@ public class FullScreenImageAdapter extends PagerAdapter {
         imgDisplay = (ImageView) viewLayout.findViewById(R.id.imgDisplay);
         btnClose = (Button) viewLayout.findViewById(R.id.btnClose);
 
-        Picasso.with(_activity).load(_imagePaths.get(position-1).getThumbnail_image_url()).into(imgDisplay);
+        Picasso.with(_activity).load(_imagePaths.get(position).getThumbnail_image_url()).into(imgDisplay);
         // close button click event
         btnClose.setOnClickListener(new View.OnClickListener() {
             @Override

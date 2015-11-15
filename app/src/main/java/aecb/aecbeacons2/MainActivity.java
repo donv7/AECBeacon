@@ -149,7 +149,7 @@ public class MainActivity extends Activity {
                     startActivityForResult(getCameraImage, REQUEST_CAMERA);
                 } else {
                     Intent i = new Intent(MainActivity.this, FullScreenViewActivity.class);
-                    i.putExtra("position", position);
+                    i.putExtra("position", position-1);
                     startActivity(i);
                 }
             }
