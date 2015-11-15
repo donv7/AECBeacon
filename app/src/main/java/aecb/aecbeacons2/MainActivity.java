@@ -96,8 +96,8 @@ public class MainActivity extends Activity {
     //List<AecbImage> currentBeaconList;
     ImageAdapter mImageAdapter;
 
-    @Bind(R.id.ivPic) ImageView ivPic;
-    @Bind(R.id.btnOne) Button btnOne;
+    //@Bind(R.id.ivPic) ImageView ivPic;
+    //@Bind(R.id.btnOne) Button btnOne;
     @Bind(R.id.gvGrid) GridView gvGrid;
 
     // region create, resume, pause, destroy
@@ -129,6 +129,23 @@ public class MainActivity extends Activity {
                                     int position, long id) {
                 Toast.makeText(MainActivity.this, "" + position,
                         Toast.LENGTH_SHORT).show();
+                if(position==0){
+                    //take a picture with the camera
+                    Intent getCameraImage = new Intent("android.media.action.IMAGE_CAPTURE");
+
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'T'HHmmss");
+                    String timeStamp = dateFormat.format(new Date());
+                    String imageFileName = "aecb_" + timeStamp + ".jpg";
+
+                    // get the path to save the file
+                    File path = MainActivity.this.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+                    File photo = new File(path, imageFileName);
+                    getCameraImage.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
+                    imageUri = Uri.fromFile(photo);
+
+                    startActivityForResult(getCameraImage, REQUEST_CAMERA);
+                }
             }
         });
 
@@ -180,7 +197,7 @@ public class MainActivity extends Activity {
     // endregion
 
     // region ui
-    @OnClick(R.id.btnOne)
+    /*@OnClick(R.id.btnOne)
     public void onClick_submit(View v) {
         //take a picture with the camera
         Intent getCameraImage = new Intent("android.media.action.IMAGE_CAPTURE");
@@ -197,10 +214,10 @@ public class MainActivity extends Activity {
         imageUri = Uri.fromFile(photo);
 
         startActivityForResult(getCameraImage, REQUEST_CAMERA);
-    }
+    }*/
 
     protected void imageOnActivityResult(Intent data) {
-        ivPic.setImageURI(imageUri);
+        //ivPic.setImageURI(imageUri);
 
         File f = new File(imageUri.getPath());
 
@@ -326,7 +343,7 @@ public class MainActivity extends Activity {
             }
             // otherwise, same beacon... do nothing
 
-            btnOne.setText(beaconName);
+            //btnOne.setText(beaconName);
             Log.i("result", mBeacons.toString());
 //            BluetoothDevice btDevice = result.getDevice();
 //            connectToDevice(btDevice);
