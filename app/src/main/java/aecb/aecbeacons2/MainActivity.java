@@ -240,8 +240,8 @@ public class MainActivity extends Activity {
                 AecbApi.getImages(new Callback<List<AecbImage>>() {
                     @Override
                     public void success(List<AecbImage> beaconList, retrofit.client.Response response) {
-                        Toast.makeText(MainActivity.this, "New beacon!",
-                                Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(MainActivity.this, "New beacon!",
+                        //        Toast.LENGTH_SHORT).show();
 
                         filterBeaconList(beaconList, beaconName);
                         mImageAdapter.setBeaconList(beaconList);
@@ -328,7 +328,7 @@ public class MainActivity extends Activity {
                 AecbApi.getImages(new Callback<List<AecbImage>>() {
                     @Override
                     public void success(List<AecbImage> beaconList, retrofit.client.Response response) {
-                        Toast.makeText(MainActivity.this, "Successfully gotten?...!",
+                        Toast.makeText(MainActivity.this, "New Beacon!",
                                 Toast.LENGTH_SHORT).show();
 
                         filterBeaconList(beaconList, beaconName);
