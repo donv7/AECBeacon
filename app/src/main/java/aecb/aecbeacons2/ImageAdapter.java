@@ -3,21 +3,31 @@ package aecb.aecbeacons2;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class ImageAdapter extends BaseAdapter {
     private Context mContext;
+    List<AecbImage> mAecbImageList;
+
 
     public ImageAdapter(Context c) {
         mContext = c;
+        mAecbImageList = new ArrayList<AecbImage>();
     }
 
     public int getCount() {
-        return mThumbIds.length;
+        //return mThumbIds.length;
+        return mAecbImageList.size()+1;
     }
 
     public Object getItem(int position) {
@@ -26,6 +36,10 @@ public class ImageAdapter extends BaseAdapter {
 
     public long getItemId(int position) {
         return 0;
+    }
+
+    public void setBeaconList(List<AecbImage> aecbImageList){
+        mAecbImageList = aecbImageList;
     }
 
     // create a new ImageView for each item referenced by the Adapter
@@ -43,11 +57,13 @@ public class ImageAdapter extends BaseAdapter {
 
         if(position==0) {
             imageView.setImageResource(R.drawable.addphoto);
-            imageView.setBackgroundColor(Color.TRANSPARENT);
+            //imageView.setBackgroundColor(Color.TRANSPARENT);
         }
         else {
-            imageView.setBackgroundColor(mThumbIds[position]);
-            imageView.setImageResource(Color.TRANSPARENT);
+            //imageView.setImageURI(new Uri(mAecbImageList.get(position).getThumbnail_image_url()));
+            //Picasso.with(mContext).load("http://i.imgur.com/DvpvklR.png").into(imageView);
+            Picasso.with(mContext).load(mAecbImageList.get(position-1).getThumbnail_image_url()).into(imageView);
+            //imageView.setImageResource(Color.TRANSPARENT);
         }
 
         return imageView;

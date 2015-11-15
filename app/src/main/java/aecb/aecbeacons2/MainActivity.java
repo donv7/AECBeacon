@@ -60,10 +60,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.mime.TypedFile;
 
 @TargetApi(21)
 public class MainActivity extends Activity {
@@ -80,13 +84,20 @@ public class MainActivity extends Activity {
     private BluetoothGatt mGatt;
     private HashMap<String, Integer> mBeacons;
 
-    @Bind(R.id.textView) TextView textView;
 
     // endregion
 
     Uri imageUri;
 
+    String beaconName;
+
+    AecbRetrofit.AecbApiService AecbApi;
+
+    //List<AecbImage> currentBeaconList;
+    ImageAdapter mImageAdapter;
+
     @Bind(R.id.ivPic) ImageView ivPic;
+    @Bind(R.id.btnOne) Button btnOne;
     @Bind(R.id.gvGrid) GridView gvGrid;
 
     // region create, resume, pause, destroy
@@ -110,7 +121,8 @@ public class MainActivity extends Activity {
                 (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter = bluetoothManager.getAdapter();
 
-        gvGrid.setAdapter(new ImageAdapter(this));
+        mImageAdapter = new ImageAdapter(this);
+        gvGrid.setAdapter(mImageAdapter);
 
         gvGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
@@ -119,6 +131,10 @@ public class MainActivity extends Activity {
                         Toast.LENGTH_SHORT).show();
             }
         });
+
+        beaconName = "this is and invaaaaaalid beacon..a;jkfsd;lkfjasd;lfj";
+
+        AecbApi = new AecbRetrofit().getService(getApplication());
 
     }
 
@@ -166,8 +182,6 @@ public class MainActivity extends Activity {
     // region ui
     @OnClick(R.id.btnOne)
     public void onClick_submit(View v) {
-        Toast.makeText(this, "hi", Toast.LENGTH_SHORT).show();
-
         //take a picture with the camera
         Intent getCameraImage = new Intent("android.media.action.IMAGE_CAPTURE");
 
@@ -188,7 +202,24 @@ public class MainActivity extends Activity {
     protected void imageOnActivityResult(Intent data) {
         ivPic.setImageURI(imageUri);
 
+        File f = new File(imageUri.getPath());
+
+        TypedFile tf = new TypedFile("image/jpeg", f);
+
         //upload image to parse
+        AecbApi.postImage(tf, beaconName, new Callback<Map<String, String>>() {
+            @Override
+            public void success(Map<String, String> tokenResponse, retrofit.client.Response response) {
+                Toast.makeText(MainActivity.this, "Successfully uploaded!",
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Toast.makeText(MainActivity.this, "Shit.",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
@@ -227,12 +258,53 @@ public class MainActivity extends Activity {
         }
     }
 
+    public void filterBeaconList(List<AecbImage> beaconList, String beaconName){
+
+        for (int i=0; i<beaconList.size(); i++) {
+            if(!beaconList.get(i).getBeacon().equals(beaconName)){
+                beaconList.remove(i);
+            }
+        }
+    }
+
 
     private ScanCallback mScanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
-            textView.setText(beaconInProximity(result));
-            String beaconName = beaconInProximity(result);
+            String newBeaconName = beaconInProximity(result);
+
+            if(newBeaconName == null){
+                //make everything blank or something like that
+            }
+            else if(beaconName != newBeaconName){
+                beaconName = newBeaconName;
+
+                // get the images for this new beacon from the server
+                AecbApi.getImages(new Callback<List<AecbImage>>() {
+                    @Override
+                    public void success(List<AecbImage> beaconList, retrofit.client.Response response) {
+                        Toast.makeText(MainActivity.this, "Successfully gotten?...!",
+                                Toast.LENGTH_SHORT).show();
+
+                        filterBeaconList(beaconList, beaconName);
+
+                        //currentBeaconList = beaconList;
+                        mImageAdapter.setBeaconList(beaconList);
+                        gvGrid.invalidateViews();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Toast.makeText(MainActivity.this, "Fuck.",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                // draw the images for the new beacon!
+            }
+            // otherwise, same beacon... do nothing
+
+            btnOne.setText(beaconName);
             Log.i("result", mBeacons.toString());
 //            BluetoothDevice btDevice = result.getDevice();
 //            connectToDevice(btDevice);

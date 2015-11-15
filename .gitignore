@@ -25,3 +25,4 @@ local.properties
 .idea/libraries/okhttp_2_2_0.xml
 .idea/libraries/okio_1_2_0.xml
 .idea/libraries/retrofit_1_9_0.xml
+picasso_2_5_2.xml

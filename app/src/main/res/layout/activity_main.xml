@@ -15,7 +15,7 @@ android:gravity="center">
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:paddingLeft="12dp"
-    android:paddingRight="12dp"
+    android:paddingRight="2dp"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:gravity="center">
@@ -37,8 +37,6 @@ android:gravity="center">
         android:layout_height="75dp"
         android:contentDescription="pic"
         android:src="#ffffff"
-        android:adjustViewBounds="true"
-        android:layout_marginTop="90dp"
         android:layout_centerHorizontal="true"
         android:scaleType="centerCrop"
         android:layout_above="@+id/btnOne"/>
@@ -55,18 +53,8 @@ android:gravity="center">
         android:layout_centerHorizontal="true"
         android:layout_marginTop="13dp"
         android:layout_marginBottom="13dp"
-        android:layout_alignParentEnd="true"
         android:textStyle="bold"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="some text or something"
-        android:id="@+id/textView"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="18dp"
-        android:layout_marginBottom="18dp"/>
 </RelativeLayout>
 
 </RelativeLayout>

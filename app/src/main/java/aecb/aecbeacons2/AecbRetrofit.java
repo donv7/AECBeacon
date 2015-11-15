@@ -1,91 +1,43 @@
 package aecb.aecbeacons2;
 
 import android.app.Application;
-import android.content.Intent;
 
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import java.net.HttpURLConnection;
 import java.util.List;
 import java.util.Map;
 
 import retrofit.Callback;
-import retrofit.ErrorHandler;
-import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
-import retrofit.RetrofitError;
 import retrofit.client.OkClient;
-import retrofit.converter.GsonConverter;
-import retrofit.http.Body;
-import retrofit.http.Field;
-import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
 import retrofit.http.Multipart;
-import retrofit.http.PATCH;
 import retrofit.http.POST;
 import retrofit.http.Part;
-import retrofit.http.Path;
-import retrofit.mime.TypedByteArray;
-import retrofit.mime.TypedFile;
-
-
-
-
-import android.content.Intent;
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import java.net.HttpURLConnection;
-import java.util.List;
-import java.util.Map;
-
-
-import retrofit.Callback;
-import retrofit.ErrorHandler;
-import retrofit.RequestInterceptor;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.OkClient;
-import retrofit.converter.GsonConverter;
-import retrofit.http.Body;
-import retrofit.http.Field;
-import retrofit.http.FormUrlEncoded;
-import retrofit.http.GET;
-import retrofit.http.Multipart;
-import retrofit.http.PATCH;
-import retrofit.http.POST;
-import retrofit.http.Part;
-import retrofit.http.Path;
-import retrofit.http.Query;
-import retrofit.mime.TypedByteArray;
 import retrofit.mime.TypedFile;
 
 public final class AecbRetrofit {
 
-    public interface RmbxApiService {
+    public interface AecbApiService {
 
-//        @FormUrlEncoded
-//        @POST("/api/v2/users/auth_token/")
-//        void getToken(@Field("email") String email, @Field("password") String password,
-//                      Callback<List<Map<String, String>>> callback);
-//
-//        @POST("/api/v2/employee_work_shifts/")
-//        void createEmployeeWorkShift(@Body EmployeeWorkShift ews,
-//                                     Callback<List<EmployeeWorkShift>> callback);
+        @Multipart
+        @POST("/location_pics.json")
+        void postImage(@Part("location_pic[image]") TypedFile photo,
+                            @Part("location_pic[beacon]") String beaconName,
+                            Callback<Map<String, String>> callback);
+
+        @GET("/location_pics.json")
+        void getImages(Callback<List<AecbImage>> callback);
+
     }
 
-    public RmbxApiService getService(Application application) {
+    public AecbApiService getService(Application application) {
 
 
         RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint("tranquil-sands-1255.herokuapp.com")
+                .setEndpoint("http://ec2-54-86-192-65.compute-1.amazonaws.com:3000")
                 .setClient(new OkClient())
                 .build();
 
-        RmbxApiService rmbxApiService = restAdapter.create(RmbxApiService.class);
+        AecbApiService rmbxApiService = restAdapter.create(AecbApiService.class);
 
         return rmbxApiService;
     }
