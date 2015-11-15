@@ -88,6 +88,8 @@ public class MainActivity extends Activity {
 
     // endregion
 
+    String INVALID_BEACON = "invalllllid beacon";
+
     Uri imageUri;
 
     String beaconName;
@@ -128,8 +130,8 @@ public class MainActivity extends Activity {
         gvGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                
-                if(position==0){
+
+                if(position==0 && beaconName!=null && beaconName!=INVALID_BEACON){
                     //take a picture with the camera
                     Intent getCameraImage = new Intent("android.media.action.IMAGE_CAPTURE");
 
@@ -153,7 +155,7 @@ public class MainActivity extends Activity {
             }
         });
 
-        beaconName = "this is and invaaaaaalid beacon..a;jkfsd;lkfjasd;lfj";
+        beaconName = INVALID_BEACON;
 
         AecbApi = new AecbRetrofit().getService(getApplication());
 
@@ -238,7 +240,7 @@ public class MainActivity extends Activity {
                 AecbApi.getImages(new Callback<List<AecbImage>>() {
                     @Override
                     public void success(List<AecbImage> beaconList, retrofit.client.Response response) {
-                        Toast.makeText(MainActivity.this, "Successfully gotten?...!",
+                        Toast.makeText(MainActivity.this, "New beacon!",
                                 Toast.LENGTH_SHORT).show();
 
                         filterBeaconList(beaconList, beaconName);
@@ -250,7 +252,7 @@ public class MainActivity extends Activity {
 
                     @Override
                     public void failure(RetrofitError error) {
-                        Toast.makeText(MainActivity.this, "Fuck.",
+                        Toast.makeText(MainActivity.this, "Get Image Failure.",
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -258,7 +260,7 @@ public class MainActivity extends Activity {
 
             @Override
             public void failure(RetrofitError error) {
-                Toast.makeText(MainActivity.this, "Shit.",
+                Toast.makeText(MainActivity.this, "Upload Image Failure.",
                         Toast.LENGTH_SHORT).show();
             }
         });
