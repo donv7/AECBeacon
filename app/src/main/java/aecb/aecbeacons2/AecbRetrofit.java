@@ -33,7 +33,7 @@ public final class AecbRetrofit {
 
 
         RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint("http://ec2-54-86-192-65.compute-1.amazonaws.com:3000")
+                .setEndpoint("http://ec2-52-91-98-4.compute-1.amazonaws.com:3000")
                 .setClient(new OkClient())
                 .build();
 

@@ -165,9 +165,11 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         mBeacons = new HashMap<String, Integer>();
-        mBeacons.put("D5:4E:CC:37:29:F5", -1000);
-        mBeacons.put("F2:C1:3A:BB:AD:D9", -1000);
-        mBeacons.put("E0:60:E2:5A:9E:29", -1000);
+//        mBeacons.put("41:32:4B:C2:A4:1D", -1000);
+//        mBeacons.put("D4:F0:A3:9A:C8:67", -1000);
+
+        mBeacons.put("C0:DC:A6:1F:2E:84", -1000);
+        mBeacons.put("EB:30:5B:EA:91:31", -1000);
         if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
@@ -358,6 +360,7 @@ public class MainActivity extends Activity {
         }
 
         private String beaconInProximity(ScanResult result) {
+            Log.i("address:", result.getDevice().getAddress() + " - " + String.valueOf(result.getRssi()));
             if (mBeacons.keySet().contains(result.getDevice().getAddress())) {
                 mBeacons.put(result.getDevice().getAddress(), result.getRssi());
             }
